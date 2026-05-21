@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# k8s/deployment.yaml
+# Kubernetes Deployment — runs 2 replicas of the dashboard pod
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zomato-dashboard
+  labels:
+    app: zomato-dashboard
+spec:
+  replicas: 2                       # two pods for high availability
+  selector:
+    matchLabels:
+      app: zomato-dashboard
+  strategy:
+    type: RollingUpdate             # zero-downtime deploys
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: zomato-dashboard
+    spec:
+      containers:
+        - name: dashboard
+          # Replace <YOUR_DOCKERHUB_USERNAME> with your Docker Hub username
+          image: <YOUR_DOCKERHUB_USERNAME>/zomato-dashboard:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              value: "5000"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          # Liveness probe — restart pod if app is hung
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          # Readiness probe — only send traffic when app is ready
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,22 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# k8s/hpa.yaml
+# Horizontal Pod Autoscaler — auto-scales pods based on CPU usage
+# ─────────────────────────────────────────────────────────────────────────────
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: zomato-dashboard-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: zomato-dashboard
+  minReplicas: 2                    # never go below 2 pods
+  maxReplicas: 6                    # scale up to 6 under heavy traffic
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70    # scale up if average CPU > 70%

@@ -1,0 +1,13 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# render.yaml  — tells Render.com how to deploy this service
+# ─────────────────────────────────────────────────────────────────────────────
+services:
+  - type: web
+    name: zomato-dashboard
+    runtime: docker              # use our Dockerfile
+    dockerfilePath: ./Dockerfile
+    plan: free                   # free tier
+    envVars:
+      - key: PORT
+        value: 5000
+    healthCheckPath: /health     # Render pings this to verify the app is alive
