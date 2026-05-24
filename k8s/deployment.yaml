@@ -26,7 +26,7 @@ spec:
       containers:
         - name: dashboard
           # Replace <YOUR_DOCKERHUB_USERNAME> with your Docker Hub username
-          image: <YOUR_DOCKERHUB_USERNAME>/zomato-dashboard:latest
+          image: SUMIT0177/zomato-dashboard:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 5000

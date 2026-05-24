@@ -21,7 +21,6 @@ COPY --from=builder /install /usr/local
 
 # Copy application source
 COPY app/       ./app/
-COPY data/      ./data/
 COPY requirements.txt .
 
 # Ownership
